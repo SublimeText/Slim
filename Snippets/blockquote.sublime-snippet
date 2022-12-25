@@ -1,0 +1,6 @@
+<snippet>
+	<content><![CDATA[blockquote]]></content>
+	<tabTrigger>b</tabTrigger>
+	<scope>text.slim - text.slim meta.filter - text.slim meta.embedded - text.slim source</scope>
+	<description>blockquote</description>
+</snippet>

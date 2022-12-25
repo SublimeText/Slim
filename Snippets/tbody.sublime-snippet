@@ -1,0 +1,9 @@
+<snippet>
+	<content><![CDATA[tbody
+	tr
+		td
+			${1:| Table Data}]]></content>
+	<tabTrigger>tbody</tabTrigger>
+	<scope>text.slim - text.slim meta.filter - text.slim meta.embedded - text.slim source</scope>
+	<description>tbody</description>
+</snippet>

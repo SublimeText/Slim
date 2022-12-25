@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plist version="1.0">
+<dict>
+	<key>scope</key>
+	<string>text.slim meta.embedded source.ruby</string>
+	<key>settings</key>
+	<dict>
+		<key>bracketIndentNextLinePattern</key>
+		<string><![CDATA[(?x)
+			# indent ruby continuation line
+			^\s* [-~=] .* [,\\] \s* $
+		]]></string>
+	</dict>
+</dict>
+</plist>

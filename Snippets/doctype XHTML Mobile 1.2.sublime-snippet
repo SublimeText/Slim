@@ -1,0 +1,6 @@
+<snippet>
+	<content><![CDATA[doctype mobile]]></content>
+	<tabTrigger>doctype</tabTrigger>
+	<scope>text.slim - text.slim meta.filter - text.slim meta.embedded - text.slim source</scope>
+	<description>doctype XHTML Mobile 1.2</description>
+</snippet>

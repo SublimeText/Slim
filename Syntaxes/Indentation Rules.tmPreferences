@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plist version="1.0">
+<dict>
+	<key>scope</key>
+	<string>text.slim</string>
+	<key>settings</key>
+	<dict>
+		<key>increaseIndentPattern</key>
+		<string><![CDATA[(?x)
+			^ \s* (
+			# indend filters
+			  .* : \s* $
+			# indend ruby lines
+			| [-~] \s* (
+			  # begin of conditional or loop block
+				( if | else | for | while )\b
+			  # begin of `do` block
+			  | .* do \s* $
+			  )
+			)
+		]]></string>
+		<key>decreaseIndentPattern</key>
+		<string><![CDATA[(?x)
+			^ \s* (
+			  [-~] \s* ( end | else )\b
+			) \s* $
+		]]></string>
+	</dict>
+</dict>
+</plist>

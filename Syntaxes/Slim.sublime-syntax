@@ -1,0 +1,728 @@
+%YAML 1.2
+---
+# https://www.rubydoc.info/gems/slim/frames
+# http://www.sublimetext.com/docs/syntax.html
+name: Slim
+scope: text.slim
+version: 2
+
+file_extensions:
+  - slim
+  - skim
+
+variables:
+  tag_name: (?:\w(?:[\w:-]*\w)?)
+  tag_name_break: (?![:-]?\w)
+
+  # https://github.com/slim-template/slim/blob/e8b25c0728e447ea1ec5942700fa3026302ce222/lib/slim/parser.rb#L81-L82
+  attr_name: '[^\s"''></={{attr_shortcut}}{{splat_prefix}}]+'
+
+  # class, id and splat attribute shortcuts
+  # they are configurable, so make modification easy
+  attr_shortcut: '[{{class_attr_shortcut}}{{id_attr_shortcut}}]'
+  class_attr_shortcut: \.
+  id_attr_shortcut: \#
+
+  # https://github.com/slim-template/slim/blob/e8b25c0728e447ea1ec5942700fa3026302ce222/lib/slim/parser.rb#L72-L73
+  attr_shortcut_value: (?:[\w-]|\/\d+|:[\w-]+)+
+
+  # copy of: Packages/HTML/HTML.sublime-syntax
+  event_attr_names: |-
+    (?xi: onabort | onautocomplete | onautocompleteerror | onauxclick | onblur
+    | oncancel | oncanplay | oncanplaythrough | onchange | onclick | onclose
+    | oncontextmenu | oncopy | oncuechange | ondblclick | ondrag | ondragend
+    | ondragenter | ondragexit | ondragleave | ondragover | ondragstart | ondrop
+    | ondurationchange | onemptied | onended | onerror | onfocus | onfocusin
+    | onfocusout | oninput | oninvalid | onkeydown | onkeypress | onkeyup
+    | onload | onloadeddata | onloadedmetadata | onloadstart | onmousedown
+    | onmouseenter | onmouseleave | onmousemove | onmouseout | onmouseover
+    | onmouseup | onmousewheel | onpaste | onpause | onplay | onplaying
+    | onprogress | onratechange | onreset | onresize | onscroll | onseeked
+    | onseeking | onselect | onshow | onsort | onstalled | onsubmit | onsuspend
+    | ontimeupdate | ontoggle | onvolumechange | onwaiting )
+
+  splat_prefix: \*
+
+  filter_escapes: ^(?!(\1\s)|\s*$)
+
+  rubyline_begin: (?:([-~])|(==?)({{wrap_whitespace}})?)
+  wrap_whitespace: (?:<>|><|<|>)
+
+contexts:
+  main:
+    - include: frontmatter
+    - match: ''
+      set: slim
+
+  frontmatter:
+    - match: (---)\s*(?i:(yaml|yml)\s*)?(?:\n|$)
+      captures:
+        0: meta.frontmatter.slim
+        1: punctuation.section.block.begin.frontmatter.slim
+        2: constant.other.language-name.slim
+      embed: scope:source.yaml
+      embed_scope: meta.frontmatter.slim source.yaml.embedded.slim
+      escape: ^(---)\s*(?:\n|$)
+      escape_captures:
+        0: meta.frontmatter.slim
+        1: punctuation.section.block.end.frontmatter.slim
+
+  slim:
+    - include: slim-comments
+    - include: slim-prologs
+    - include: slim-filters
+    - include: slim-doctypes
+    - include: slim-tags
+    - include: slim-rubylines
+    - include: slim-verbatims
+
+###[ COMMENTS ]################################################################
+
+  slim-comments:
+    # https://www.rubydoc.info/gems/slim/frames#html-comment
+    - match: ^(\s*)(/!)
+      captures:
+        2: punctuation.definition.comment.slim
+      push: slim-html-comment-body
+    # https://www.rubydoc.info/gems/slim/frames#ie-conditional-comment
+    - match: ^(\s*)(/)((\[)[^\]]*(\]))
+      captures:
+        2: punctuation.definition.comment.slim
+        3: meta.brackets.slim
+        4: punctuation.section.brackets.begin.slim
+        5: punctuation.section.brackets.end.slim
+      push: slim-code-comment-body
+    # https://www.rubydoc.info/gems/slim/frames#code-comment
+    - match: ^(\s*)(/+)
+      captures:
+        2: punctuation.definition.comment.slim
+      push: slim-code-comment-body
+
+  slim-code-comment-body:
+    - meta_scope: comment.block.code.slim
+    - include: block-end-pop
+
+  slim-html-comment-body:
+    - meta_scope: comment.block.html.slim
+    - include: block-end-pop
+
+###[ FILTERS ]#################################################################
+
+  slim-filters:
+    # https://www.rubydoc.info/gems/slim/frames#embedded-engines-markdown
+    - include: slim-filters-coffee
+    - include: slim-filters-css
+    - include: slim-filters-erb
+    - include: slim-filters-javascript
+    - include: slim-filters-less
+    - include: slim-filters-ruby
+    - include: slim-filters-sass
+    - include: slim-filters-scss
+    - include: slim-filters-plain
+
+  slim-filters-coffee:
+    # Embed coffee code and wrap in script tag with optional attributes
+    - match: ^(\s*)(coffee{{tag_name_break}})
+      captures:
+        2: meta.tag.filter.slim constant.other.language-name.slim
+      embed: slim-coffee-filter-tag-body
+      embed_scope: meta.filter.slim
+      escape: '{{filter_escapes}}'
+
+  slim-coffee-filter-tag-body:
+    - meta_content_scope: meta.tag.filter.slim
+    - match: ':'
+      scope: punctuation.definition.filter.slim
+      push: slim-coffee-filter-body
+    - include: slim-tag-attributes
+
+  slim-coffee-filter-body:
+    # Note: `embed` is used here so ST can lazy load syntax on demand,
+    # to keep syntax cache small and gracefully handle missing syntax.
+    - clear_scopes: 1
+    - match: ^
+      embed: scope:source.coffee
+      embed_scope: source.coffee.embedded.slim
+      escape: ^(?=\S)
+
+  slim-filters-css:
+    # Embed css code and wrap in style tag with optional attributes
+    - match: ^(\s*)(css{{tag_name_break}})
+      captures:
+        2: meta.tag.filter.slim constant.other.language-name.slim
+      embed: slim-css-filter-tag-body
+      embed_scope: meta.filter.slim
+      escape: '{{filter_escapes}}'
+
+  slim-css-filter-tag-body:
+    - meta_content_scope: meta.tag.filter.slim
+    - match: ':'
+      scope: punctuation.definition.filter.slim
+      push: slim-css-filter-body
+    - include: slim-tag-attributes
+
+  slim-css-filter-body:
+    # Note: `embed` is used here so ST can lazy load syntax on demand,
+    # to keep syntax cache small and gracefully handle missing syntax.
+    - clear_scopes: 1
+    - match: ^
+      embed: scope:source.css.embedded.slim
+      embed_scope: source.css.embedded.slim
+      escape: ^(?=\S)
+
+  slim-filters-erb:
+    # Compile erb code
+    - match: ^(\s*)((erb)(:)\s*(\n|$))
+      captures:
+        2: meta.filter.slim
+        3: constant.other.language-name.slim
+        4: punctuation.definition.filter.slim
+      embed: scope:text.html.ruby
+      embed_scope: meta.filter.slim text.html.erb.embedded.slim
+      escape: '{{filter_escapes}}'
+
+  slim-filters-javascript:
+    # Embed javascript code and wrap in script tag with optional attributes
+    - match: ^(\s*)(javascript{{tag_name_break}})
+      captures:
+        2: meta.tag.filter.slim constant.other.language-name.slim
+      embed: slim-javascript-filter-tag-body
+      embed_scope: meta.filter.slim
+      escape: '{{filter_escapes}}'
+
+  slim-javascript-filter-tag-body:
+    - meta_content_scope: meta.tag.filter.slim
+    - match: ':'
+      scope: punctuation.definition.filter.slim
+      push: slim-javascript-filter-body
+    - include: slim-tag-attributes
+
+  slim-javascript-filter-body:
+    # Note: `embed` is used here so ST can lazy load syntax on demand,
+    # to keep syntax cache small and gracefully handle missing syntax.
+    - clear_scopes: 1
+    - match: ^
+      embed: scope:source.js.embedded.slim
+      embed_scope: source.js.embedded.slim
+      escape: ^(?=\S)
+
+  slim-filters-less:
+    # Compile less code and wrap in style tag with optional attributes
+    - match: ^(\s*)(less{{tag_name_break}})
+      captures:
+        2: meta.tag.filter.slim constant.other.language-name.slim
+      embed: slim-less-filter-tag-body
+      embed_scope: meta.filter.slim
+      escape: '{{filter_escapes}}'
+
+  slim-less-filter-tag-body:
+    - meta_content_scope: meta.tag.filter.slim
+    - match: ':'
+      scope: punctuation.definition.filter.slim
+      push: slim-less-filter-body
+    - include: slim-tag-attributes
+
+  slim-less-filter-body:
+    # Note: `embed` is used here so ST can lazy load syntax on demand,
+    # to keep syntax cache small and gracefully handle missing syntax.
+    - clear_scopes: 1
+    - match: ^
+      embed: scope:source.less
+      embed_scope: source.less.embedded.slim
+      escape: ^(?=\S)
+
+  slim-filters-plain:
+    - match: ^(\s*)(({{tag_name}})(:)\s*(\n|$))
+      captures:
+        2: meta.tag.filter.slim
+        3: constant.other.language-name.slim
+        4: punctuation.definition.filter.slim
+      embed: scope:text.plain
+      embed_scope: meta.filter.slim text.plain.embedded.slim
+      escape: '{{filter_escapes}}'
+
+  slim-filters-ruby:
+    # Shortcut to embed ruby code
+    # Not wrapped in any tag, hence no attribute part
+    - match: ^(\s*)((ruby)(:)\s*(\n|$))
+      captures:
+        2: meta.tag.filter.slim
+        3: constant.other.language-name.slim
+        4: punctuation.definition.filter.slim
+      embed: scope:source.ruby.rails
+      embed_scope:
+        meta.filter.slim meta.embedded.slim
+        source.ruby.rails.embedded.slim
+      escape: '{{filter_escapes}}'
+
+  slim-filters-sass:
+    # Compile sass code and wrap in style tag with optional attributes
+    - match: ^(\s*)(sass{{tag_name_break}})
+      captures:
+        2: meta.tag.filter.slim constant.other.language-name.slim
+      embed: slim-sass-filter-tag-body
+      embed_scope: meta.filter.slim
+      escape: '{{filter_escapes}}'
+
+  slim-sass-filter-tag-body:
+    - meta_content_scope: meta.tag.filter.slim
+    - match: ':'
+      scope: punctuation.definition.filter.slim
+      push: slim-sass-filter-body
+    - include: slim-tag-attributes
+
+  slim-sass-filter-body:
+    # Note: `embed` is used here so ST can lazy load syntax on demand,
+    # to keep syntax cache small and gracefully handle missing syntax.
+    - clear_scopes: 1
+    - match: ^
+      embed: scope:source.sass
+      embed_scope: source.sass.embedded.slim
+      escape: ^(?=\S)
+
+  slim-filters-scss:
+    # Compile scss code and wrap in style tagwith optional attributes
+    - match: ^(\s*)(scss{{tag_name_break}})
+      captures:
+        2: meta.tag.filter.slim constant.other.language-name.slim
+      embed: slim-scss-filter-tag-body
+      embed_scope: meta.filter.slim
+      escape: '{{filter_escapes}}'
+
+  slim-scss-filter-tag-body:
+    - meta_content_scope: meta.tag.filter.slim
+    - match: ':'
+      scope: punctuation.definition.filter.slim
+      push: slim-scss-filter-body
+    - include: slim-tag-attributes
+
+  slim-scss-filter-body:
+    # Note: `embed` is used here so ST can lazy load syntax on demand,
+    # to keep syntax cache small and gracefully handle missing syntax.
+    - clear_scopes: 1
+    - match: ^
+      embed: scope:source.scss
+      embed_scope: source.scss.embedded.slim
+      escape: ^(?=\S)
+
+###[ TAGS ]####################################################################
+
+  slim-prologs:
+    - match: ^(!).*
+      scope: meta.prolog.slim
+      captures:
+        1: punctuation.definition.prolog.slim
+
+  slim-doctypes:
+    - match: ^(\s*)(doctype{{tag_name_break}})
+      captures:
+        2: meta.tag.sgml.doctype.slim entity.name.tag.slim
+      push: slim-doctype-content
+
+  slim-doctype-content:
+    - meta_content_scope: meta.tag.sgml.doctype.slim
+    - include: eol-pop
+    - match: \S+
+      scope: meta.string.slim string.unquoted.slim
+
+  slim-tags:
+    - match: ^(\s*)({{tag_name}}|(?={{attr_shortcut}}|{{splat_prefix}}\S))
+      captures:
+        2: meta.tag.slim entity.name.tag.slim
+      push:
+        - slim-tag-text
+        - slim-tag-end
+        - slim-tag-body
+
+  slim-tag-text:
+    # A verbatim text block beginning at the same line as a tag is continued
+    # as long as subsequent lines are indented at least one whitespace more than
+    # the top-most opening tag.
+    - meta_scope: text.html.embedded.slim
+    - include: slim-verbatim-content
+    - include: block-end-pop
+
+  slim-tag-end:
+    - clear_scopes: 1  # clear `text.html.embedded.slim` from tag
+    - meta_include_prototype: false
+    - match: (\s*(:))\s+({{tag_name}}|(?={{attr_shortcut}}|{{splat_prefix}}\S))
+      captures:
+        1: meta.tag.slim
+        2: punctuation.definition.tag.end.slim
+        3: meta.tag.slim entity.name.tag.slim
+      push: slim-tag-body
+    - match: \s*(/)
+      scope: meta.tag.slim
+      captures:
+        1: punctuation.terminator.tag.slim
+      pop: 2 # skip slim-tag-text context
+    - match: (?=\s*$)
+      pop: 2 # skip slim-tag-text context
+    - match: (?=\s*{{rubyline_begin}})
+      pop: 2 # skip slim-tag-text context
+    - include: immediately-pop
+
+  slim-tag-body:
+    - meta_include_prototype: false
+    - meta_content_scope: meta.tag.slim
+    - match: \s*({{wrap_whitespace}})
+      captures:
+        1: keyword.operator.whitespace.slim
+    # attribute shortcuts
+    - match: \s*(({{class_attr_shortcut}})({{attr_shortcut_value}}))
+      captures:
+        1: meta.attribute-with-value.class.slim
+        2: punctuation.definition.attribute.class.slim
+        3: meta.string.slim string.unquoted.slim
+    - match: \s*(({{id_attr_shortcut}})({{attr_shortcut_value}}))
+      captures:
+        1: meta.attribute-with-value.id.slim
+        2: punctuation.definition.attribute.id.slim
+        3: meta.string.slim string.unquoted.slim
+    # attribute lists
+    - match: \s*(\{)
+      captures:
+        1: meta.braces.slim punctuation.section.braces.begin.slim
+      push: slim-tag-braces-body
+    - match: \s*(\[)
+      captures:
+        1: meta.brackets.slim punctuation.section.brackets.begin.slim
+      push: slim-tag-brackets-body
+    - match: \s*(\()
+      captures:
+        1: meta.parens.slim punctuation.section.parens.begin.slim
+      push: slim-tag-parens-body
+    - match: ''
+      push: slim-tag-plain-body
+
+  slim-tag-braces-body:
+    - meta_content_scope: meta.braces.slim
+    - match: \}
+      scope: meta.braces.slim punctuation.section.braces.end.slim
+      pop: 2
+    - include: slim-tag-bracket-content
+
+  slim-tag-brackets-body:
+    - meta_content_scope: meta.brackets.slim
+    - match: \]
+      scope: meta.brackets.slim punctuation.section.brackets.end.slim
+      pop: 2
+    - include: slim-tag-bracket-content
+
+  slim-tag-parens-body:
+    - meta_content_scope: meta.parens.slim
+    - match: \)
+      scope: meta.parens.slim punctuation.section.parens.end.slim
+      pop: 2
+    - include: slim-tag-bracket-content
+
+  slim-tag-bracket-content:
+    - include: slim-tag-attributes
+    - match: /
+      scope: invalid.illegal.unexpected-terminator.slim
+
+  slim-tag-plain-body:
+    - include: slim-tag-attributes
+    - match: '{{splat_prefix}}\{'
+      scope: punctuation.section.embedded.begin.ruby
+      set: slim-tag-splat-body
+    - match: ({{splat_prefix}})(?:((\@)\w+)|(\w+))
+      scope: meta.embedded.slim source.ruby.rails.embedded.slim
+      captures:
+        1: punctuation.section.embedded.begin.ruby
+        2: variable.other.readwrite.instance.ruby
+        3: punctuation.definition.variable.ruby
+        4: variable.function.ruby
+    - match: (?=\s*{{rubyline_begin}})
+      pop: 2
+    - match: $|(?=\S)
+      pop: 2
+
+  slim-tag-splat-body:
+    - meta_scope: meta.embedded.slim
+    - meta_content_scope: source.ruby.rails.embedded.slim
+    - match: \}
+      scope: punctuation.section.embedded.ruby
+      pop: 2
+    - include: ruby-expressions
+
+  slim-tag-attributes:
+    - include: slim-tag-event-attributes
+    - include: slim-tag-href-attributes
+    - include: slim-tag-style-attributes
+    - include: slim-tag-generic-attributes
+
+###[ TAG EVENT ATTRIBUTES ]####################################################
+
+  slim-tag-event-attributes:
+    - match: ({{event_attr_names}})\s*(==?)(?=\S|\s*['"])
+      captures:
+        1: entity.other.attribute-name.slim
+        2: punctuation.separator.key-value.slim
+      push:
+        - slim-tag-event-attribute-meta
+        - slim-tag-event-attribute-value
+
+  slim-tag-event-attribute-meta:
+    - meta_include_prototype: false
+    - meta_scope: meta.attribute-with-value.event.slim
+    - include: immediately-pop
+
+  slim-tag-event-attribute-value:
+    - match: \s*(?=['"])
+      set: slim-tag-event-attribute-quoted-value
+    - match: ''
+      set: ruby-expression
+
+  slim-tag-event-attribute-quoted-value:
+    - include: scope:text.html.embedded.slim#tag-event-attribute-value
+    - include: immediately-pop
+
+###[ TAG HREF ATTRIBUTES ]#####################################################
+
+  slim-tag-href-attributes:
+    - match: (href|src)\s*(==?)(?=\S|\s*['"])
+      captures:
+        1: entity.other.attribute-name.slim
+        2: punctuation.separator.key-value.slim
+      push:
+        - slim-tag-href-attribute-meta
+        - slim-tag-href-attribute-value
+
+  slim-tag-href-attribute-meta:
+    - meta_include_prototype: false
+    - meta_scope: meta.attribute-with-value.href.slim
+    - include: immediately-pop
+
+  slim-tag-href-attribute-value:
+    - match: \s*(?=['"])
+      set: slim-tag-href-attribute-quoted-value
+    - match: ''
+      set: ruby-expression
+
+  slim-tag-href-attribute-quoted-value:
+    - include: scope:text.html.embedded.slim#tag-href-attribute-value
+    - include: immediately-pop
+
+###[ TAG STYLE ATTRIBUTES ]####################################################
+
+  slim-tag-style-attributes:
+    - match: (style)\s*(==?)(?=\S|\s*['"])
+      captures:
+        1: entity.other.attribute-name.slim
+        2: punctuation.separator.key-value.slim
+      push:
+        - slim-tag-style-attribute-meta
+        - slim-tag-style-attribute-value
+
+  slim-tag-style-attribute-meta:
+    - meta_include_prototype: false
+    - meta_scope: meta.attribute-with-value.style.slim
+    - include: immediately-pop
+
+  slim-tag-style-attribute-value:
+    - match: \s*(?=['"])
+      set: slim-tag-style-attribute-quoted-value
+    - match: ''
+      set: ruby-expression
+
+  slim-tag-style-attribute-quoted-value:
+    - include: scope:text.html.embedded.slim#tag-style-attribute-value
+    - include: immediately-pop
+
+###[ TAG GENERIC ATTRIBUTES ]##################################################
+
+  slim-tag-generic-attributes:
+    - match: ({{attr_name}})\s*(==?)(?=\S|\s*['"])
+      captures:
+        1: entity.other.attribute-name.slim
+        2: punctuation.separator.key-value.slim
+      push:
+        - slim-html-tag-attribute-meta
+        - slim-tag-generic-attribute-value
+
+  slim-html-tag-attribute-meta:
+    - meta_include_prototype: false
+    - meta_scope: meta.attribute-with-value.slim
+    - include: immediately-pop
+
+  slim-tag-generic-attribute-value:
+    - match: \s*(?=['"])
+      set: slim-html-tag-attribute-value
+    - match: ''
+      set: ruby-expression
+
+  slim-html-tag-attribute-value:
+    - include: scope:text.html.embedded.slim#tag-generic-attribute-value
+    - include: immediately-pop
+
+###[ VERBATIM TEXT ]###########################################################
+
+  slim-verbatims:
+    # https://www.rubydoc.info/gems/slim/frames#line-indicators
+    - match: ^(\s*)(['|])
+      captures:
+        2: punctuation.section.verbatim.slim
+      embed: slim-verbatim-content
+      embed_scope: text.html.embedded.slim
+      escape: '{{filter_escapes}}'
+    # https://www.rubydoc.info/gems/slim/frames#inline-html
+    # anything unrecognized is matched as single verbatim text line
+    # - covers implicit verbatim lines beginning with html tags
+    - match: ^(\s*)(?=\S)
+      push: slim-verbatim-body
+
+  slim-verbatim-body:
+    - meta_scope: text.html.embedded.slim
+    - include: slim-verbatim-content
+    - include: eol-pop
+
+  slim-verbatim-content:
+    - include: scope:text.html.embedded.slim
+      apply_prototype: true
+    - include: slim-escapes
+
+###[ EMBEDDED RUBY LINES ]#####################################################
+
+  slim-rubylines:
+    # https://www.rubydoc.info/gems/slim/frames#control-code
+    # https://www.rubydoc.info/gems/slim/frames#output
+    # embedded ruby control or output code
+    # - may start at a line or directly follo a tag
+    - match: \s*({{rubyline_begin}})
+      captures:
+        1: meta.embedded.slim
+        2: punctuation.section.embedded.slim
+        3: punctuation.section.embedded.slim
+        4: keyword.operator.whitespace.slim
+      push: slim-rubyline-body
+
+  slim-rubyline-body:
+    - meta_content_scope: meta.embedded.slim source.ruby.rails.embedded.slim
+    # Hack to towart Sublime's Ruby highlighter.
+    # It thinks `do` without a variable continues the next line
+    # (this can be muted with a / at the end of the line).
+    # For things like yields, do is unnecessary without an argument,
+    # so this hack will suffice
+    - match: (do)\s*(?:\n|$)
+      captures:
+        1: keyword.control.start-block.ruby
+      pop: 1
+    - match: (?:\n|$)
+      pop: 1
+    - include: scope:source.ruby.rails.embedded.slim
+      apply_prototype: true
+
+###[ INTERPOLATIONS ]##########################################################
+
+  slim-string-interpolations:
+    # Interpolation with clearing `string` scope.
+    # https://slim.info/docs/yardoc/file.REFERENCE.html#ruby-interpolation-
+    # Used in
+    # - `HTML (for Slim).sublime-syntax`
+    # - `CSS (for Slim).sublime-syntax`
+    # - `JavaScript (for Slim).sublime-syntax`
+    - match: \#\{
+      scope: punctuation.section.interpolation.begin.slim
+      push: slim-string-interpolation-expression
+    - match: (?=#[@$])
+      push: slim-string-interpolation-variable
+
+  slim-string-interpolation-expression:
+    - clear_scopes: 1
+    - meta_scope: meta.interpolation.slim
+    - meta_content_scope: source.ruby.rails.embedded.slim
+    - include: slim-interpolation-expression
+
+  slim-string-interpolation-variable:
+    - clear_scopes: 1
+    - meta_scope: meta.interpolation.slim
+    - include: slim-interpolation-variable
+
+  slim-interpolations:
+    # Interpolation without clearing `string` scope for use in plain text.
+    # https://slim.info/docs/yardoc/file.REFERENCE.html#ruby-interpolation-
+    # Used in:
+    # - `CSS (for slim).sublime-syntax`
+    # - `JavaScript (for slim).sublime-syntax`
+    - match: \#\{
+      scope: punctuation.section.interpolation.begin.slim
+      push: slim-interpolation-expression
+    - match: (?=#[@$])
+      push: slim-interpolation-variable
+
+  slim-interpolation-expression:
+    - meta_scope: meta.interpolation.slim
+    - meta_content_scope: source.ruby.rails.embedded.slim
+    - match: \}
+      scope: punctuation.section.interpolation.end.slim
+      pop: 1
+    - include: ruby-expressions
+
+  slim-interpolation-variable:
+    - meta_scope: meta.interpolation.slim
+    - include: scope:source.ruby#interpolated-ruby-variables
+      apply_prototype: true
+
+  ruby-expression:
+    - meta_scope: meta.embedded.slim source.ruby.rails.embedded.slim
+    - include: ruby-expressions
+    - include: immediately-pop
+
+  ruby-expressions:
+    - include: scope:source.ruby#nest-all
+      apply_prototype: true
+    - include: scope:source.ruby#expressions
+      apply_prototype: true
+
+###[ CONTINUATIONS ]###########################################################
+
+  slim-continuations:
+    # Attribute sections and embedded ruby code may continue on next line
+    # if the current line is terminated with comma.
+    - include: slim-backslash-continuations
+    - include: slim-comma-continuations
+
+  slim-backslash-continuations:
+    - match: (\\)\s*$
+      captures:
+        1: punctuation.separator.continuation.slim
+      push: slim-backslash-continuation-body
+
+  slim-backslash-continuation-body:
+    - match: ^
+      pop: 1
+
+  slim-comma-continuations:
+    - match: (,)\s*$
+      captures:
+        1: punctuation.separator.sequence.slim
+      push: slim-comma-continuation-body
+
+  slim-comma-continuation-body:
+    # Skip "line ends with pipe" check if previous line was continued by comma.
+    - include: else-pop
+
+###[ LITERALS ]################################################################
+
+  slim-escapes:
+    - match: \\.
+      scope: constant.character.escape.slim
+
+###[ PROTOTYPES ]##############################################################
+
+  block-end-pop:
+    - match: '{{filter_escapes}}'
+      pop: 1
+
+  else-pop:
+    - match: (?=\S)
+      pop: 1
+
+  eol-pop:
+    - match: $
+      pop: 1
+
+  immediately-pop:
+    - match: ''
+      pop: 1

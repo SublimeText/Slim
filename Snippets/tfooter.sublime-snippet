@@ -1,0 +1,9 @@
+<snippet>
+	<content><![CDATA[tfoot
+	tr
+		td
+			${1:| Table Data}]]></content>
+	<tabTrigger>tfooter</tabTrigger>
+	<scope>text.slim - text.slim meta.filter - text.slim meta.embedded - text.slim source</scope>
+	<description>tfooter</description>
+</snippet>

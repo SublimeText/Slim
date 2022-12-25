@@ -1,0 +1,6 @@
+<snippet>
+	<content><![CDATA[doctype xml]]></content>
+	<tabTrigger>doctype</tabTrigger>
+	<scope>text.slim - text.slim meta.filter - text.slim meta.embedded - text.slim source</scope>
+	<description>doctype XML</description>
+</snippet>

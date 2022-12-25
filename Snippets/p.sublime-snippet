@@ -1,0 +1,6 @@
+<snippet>
+	<content><![CDATA[p ${1:Lorem ipsum...}]]></content>
+	<tabTrigger>p</tabTrigger>
+	<scope>text.slim - text.slim meta.filter - text.slim meta.embedded - text.slim source</scope>
+	<description>p</description>
+</snippet>

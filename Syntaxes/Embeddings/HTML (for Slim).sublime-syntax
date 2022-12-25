@@ -1,0 +1,142 @@
+%YAML 1.2
+---
+# This intermediate syntax exists to drive slim's HTML attributes
+scope: text.html.embedded.slim
+version: 2
+hidden: true
+
+extends: Packages/HTML/HTML.sublime-syntax
+
+variables:
+
+  # Embedded script and style syntaxes may be wrapped into html comments for
+  # historical reasons. The following patterns match them, while maintaining
+  # correct boundaries of embedded source scopes. That's required to enable
+  # embedded syntax's comment toggling in the first and last line.
+  #
+  # see:
+  # - https://github.com/sublimehq/Packages/issues/2322
+  # - https://github.com/sublimehq/sublime_text/issues/4701
+  script_content_begin: |-
+    (?x:
+    # whitespace followed by opening html comment begin punctuation
+      \s*(<!--)
+    # or any other non-whitespace character ahead
+    | (?=\s*(?!<!--)\S)
+    # or beginning of a line
+    | ^
+    )
+  script_content_end: |-
+    (?x:
+    # optional html comment end punctuation followed by </script> tag
+      (?: (\s*) (-->) \s* )? (?=</(?i:script){{tag_name_break_char}})
+    # or standalone html comment end punctuation in a line
+    |   ^ (\s*) (-->) \s* $
+    )
+  style_content_begin: '{{script_content_begin}}'
+  style_content_end: |-
+    (?x:
+    # optional html comment end punctuation followed by </style> tag
+      (?: (\s*) (-->) \s* )? (?=</(?i:style){{tag_name_break_char}})
+    # or standalone html comment end punctuation in a line
+    |   ^ (\s*) (-->) \s* $
+    )
+
+contexts:
+  prototype:
+    - meta_prepend: true
+    - include: Slim.sublime-syntax#slim-interpolations
+
+  cdata-content:
+    - meta_prepend: true
+    - include: Slim.sublime-syntax#slim-string-interpolations
+
+  script-javascript-content:
+    - meta_include_prototype: false
+    - match: '{{script_content_begin}}'
+      captures:
+        1: comment.block.html punctuation.definition.comment.begin.html
+      pop: 1  # make sure to match only once
+      embed: scope:source.js.embedded.slim
+      embed_scope: source.js.embedded.html
+      escape: '{{script_content_end}}'
+      escape_captures:
+        1: source.js.embedded.html
+        2: comment.block.html punctuation.definition.comment.end.html
+        3: source.js.embedded.html
+        4: comment.block.html punctuation.definition.comment.end.html
+
+  style-css-content:
+    - meta_include_prototype: false
+    - match: '{{style_content_begin}}'
+      captures:
+        1: comment.block.html punctuation.definition.comment.begin.html
+      pop: 1  # make sure to match only once
+      embed: scope:source.css.embedded.slim
+      embed_scope: source.css.embedded.html
+      escape: '{{style_content_end}}'
+      escape_captures:
+        1: source.css.embedded.html
+        2: comment.block.html punctuation.definition.comment.end.html
+        3: source.css.embedded.html
+        4: comment.block.html punctuation.definition.comment.end.html
+
+  tag-event-attribute-value:
+    - match: \"
+      scope:
+        meta.string.html string.quoted.double.html
+        punctuation.definition.string.begin.html
+      embed: scope:source.js.embedded.slim
+      embed_scope:
+        meta.string.html source.js.embedded.html
+      escape: \"
+      escape_captures:
+        0: meta.string.html string.quoted.double.html
+           punctuation.definition.string.end.html
+    - match: \'
+      scope:
+        meta.string.html string.quoted.single.html
+        punctuation.definition.string.begin.html
+      embed: scope:source.js.embedded.slim
+      embed_scope:
+        meta.string.html source.js.embedded.html
+      escape: \'
+      escape_captures:
+        0: meta.string.html string.quoted.single.html
+           punctuation.definition.string.end.html
+    - include: else-pop
+
+  tag-style-attribute-value:
+    - match: \"
+      scope:
+        meta.string.html string.quoted.double.html
+        punctuation.definition.string.begin.html
+      embed: scope:source.css.embedded.slim#rule-list-body
+      embed_scope:
+        meta.string.html source.css.embedded.html
+      escape: \"
+      escape_captures:
+        0: meta.string.html string.quoted.double.html
+           punctuation.definition.string.end.html
+    - match: \'
+      scope:
+        meta.string.html string.quoted.single.html
+        punctuation.definition.string.begin.html
+      embed: scope:source.css.embedded.slim#rule-list-body
+      embed_scope:
+        meta.string.html source.css.embedded.html
+      escape: \'
+      escape_captures:
+        0: meta.string.html string.quoted.single.html
+           punctuation.definition.string.end.html
+    - include: else-pop
+
+  tag-attribute-value-content:
+    - meta_prepend: true
+    - include: Slim.sublime-syntax#slim-backslash-continuations
+    - include: Slim.sublime-syntax#slim-string-interpolations
+
+  strings-common-content:
+    - meta_prepend: true
+    - include: Slim.sublime-syntax#slim-backslash-continuations
+    - include: Slim.sublime-syntax#slim-string-interpolations

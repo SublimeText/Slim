@@ -1,0 +1,13 @@
+# exclude from sublime-package
+.github/          		export-ignore
+.gitattributes    		export-ignore
+.gitignore        		export-ignore
+*.cmd             		export-ignore
+
+# linguist language settings
+*.sublime-completions	linguist-language=JSONC
+*.sublime-settings		linguist-language=JSONC
+*.sublime-snippets		linguist-language=XML
+*.sublime-syntax		linguist-language=YAML
+*.tmPreferences			linguist-language=XML
+*.tmSnippets			linguist-language=XML

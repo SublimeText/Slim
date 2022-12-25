@@ -1,0 +1,14 @@
+<snippet>
+	<content><![CDATA[table
+	thead
+		tr
+			th
+			${1:| Table Heading}
+	tbody
+		tr
+			td
+				${2:| Table Data}]]></content>
+	<tabTrigger>table</tabTrigger>
+	<scope>text.slim - text.slim meta.filter - text.slim meta.embedded - text.slim source</scope>
+	<description>table (templated)</description>
+</snippet>
