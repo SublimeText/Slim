@@ -115,6 +115,7 @@ contexts:
     - include: slim-filters-erb
     - include: slim-filters-javascript
     - include: slim-filters-less
+    - include: slim-filters-markdown
     - include: slim-filters-ruby
     - include: slim-filters-sass
     - include: slim-filters-scss
@@ -177,7 +178,7 @@ contexts:
         2: meta.filter.slim
         3: constant.other.language-name.slim
         4: punctuation.definition.filter.slim
-      embed: scope:text.html.ruby
+      embed: scope:text.html.rails
       embed_scope: meta.filter.slim text.html.erb.embedded.slim
       escape: '{{filter_escapes}}'
 
@@ -230,6 +231,17 @@ contexts:
       embed: scope:source.less
       embed_scope: source.less.embedded.slim
       escape: ^(?=\S)
+
+  slim-filters-markdown:
+    # Compile markdown code and interpolate #variables in text
+    - match: ^(\s*)((markdown)(:)\s*(\n|$))
+      captures:
+        2: meta.filter.slim
+        3: constant.other.language-name.slim
+        4: punctuation.definition.filter.slim
+      embed: scope:text.html.markdown.embedded.slim
+      embed_scope: meta.filter.slim text.html.markdown.embedded.slim
+      escape: '{{filter_escapes}}'
 
   slim-filters-plain:
     - match: ^(\s*)(({{tag_name}})(:)\s*(\n|$))
@@ -661,7 +673,7 @@ contexts:
 
   slim-interpolation-variable:
     - meta_scope: meta.interpolation.slim
-    - include: scope:source.ruby#interpolated-ruby-variables
+    - include: scope:source.ruby.rails.embedded.slim#interpolated-ruby-variables
       apply_prototype: true
 
   ruby-expression:
@@ -670,9 +682,9 @@ contexts:
     - include: immediately-pop
 
   ruby-expressions:
-    - include: scope:source.ruby#nest-all
+    - include: scope:source.ruby.rails.embedded.slim#nest-all
       apply_prototype: true
-    - include: scope:source.ruby#expressions
+    - include: scope:source.ruby.rails.embedded.slim#expressions
       apply_prototype: true
 
 ###[ CONTINUATIONS ]###########################################################

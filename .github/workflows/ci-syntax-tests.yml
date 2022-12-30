@@ -28,10 +28,10 @@ jobs:
     strategy:
       matrix:
         include:
-          - build: 4107
-            default_packages: v4107
-          - build: 4129
-            default_packages: v4129
+          - build: 4134
+            default_packages: v4134
+          - build: latest
+            default_packages: master
     steps:
       - name: Checkout Default Packages
         uses: actions/checkout@v3

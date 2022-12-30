@@ -4,7 +4,7 @@ scope: source.ruby.rails.embedded.slim
 #version: 2
 hidden: true
 
-extends: Packages/Rails/Ruby on Rails.sublime-syntax
+extends: Packages/Rails/Ruby (Rails).sublime-syntax
 
 contexts:
 

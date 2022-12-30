@@ -1532,8 +1532,28 @@ less:
 markdown:
   # Hello
   **World** #{:var}
-  / <- meta.filter.slim text.plain - meta.tag
-  /^^^^^^^^^^^ meta.filter.slim text.plain
+  / <- meta.filter.slim text.html.markdown.embedded.slim - meta.tag
+  /^^^^^^^^^^^ meta.filter.slim text.html.markdown.embedded.slim
+  /^^^^^^^^ markup.bold.markdown
+  /         ^^^^^^^ meta.filter.slim text.html.markdown.embedded.slim meta.interpolation.slim
+  /         ^^ punctuation.section.interpolation.begin.slim
+  /           ^^^^ source.ruby.rails.embedded.slim constant.other.symbol.ruby
+  /               ^ punctuation.section.interpolation.end.slim
+
+  <br class="#{:name}">
+  / <- meta.filter.slim text.html.markdown.embedded.slim meta.tag
+  /^^^^^^^^^^^^^^^^^^^^ meta.filter.slim text.html.markdown.embedded.slim meta.tag
+  /   ^^^^^^^^^^^^^^^^ meta.attribute-with-value.class.html
+  /          ^^^^^^^^ meta.class-name.html meta.string.html meta.interpolation.slim
+  /^^ entity.name.tag
+  /   ^^^^^ entity.other.attribute-name.class.html
+  /        ^ punctuation.separator.key-value.html
+  /         ^ punctuation.definition.string.begin.html
+  /          ^^ punctuation.section.interpolation.begin.slim
+  /            ^^^^^ source.ruby.rails.embedded.slim constant.other.symbol.ruby
+  /                 ^ punctuation.section.interpolation.end.slim
+  /                  ^ punctuation.definition.string.end.html
+  /                   ^ punctuation.definition.tag.end.html
 
 plain:
   Plain <b>text</b>

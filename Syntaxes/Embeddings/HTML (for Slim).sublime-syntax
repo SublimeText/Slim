@@ -7,41 +7,6 @@ hidden: true
 
 extends: Packages/HTML/HTML.sublime-syntax
 
-variables:
-
-  # Embedded script and style syntaxes may be wrapped into html comments for
-  # historical reasons. The following patterns match them, while maintaining
-  # correct boundaries of embedded source scopes. That's required to enable
-  # embedded syntax's comment toggling in the first and last line.
-  #
-  # see:
-  # - https://github.com/sublimehq/Packages/issues/2322
-  # - https://github.com/sublimehq/sublime_text/issues/4701
-  script_content_begin: |-
-    (?x:
-    # whitespace followed by opening html comment begin punctuation
-      \s*(<!--)
-    # or any other non-whitespace character ahead
-    | (?=\s*(?!<!--)\S)
-    # or beginning of a line
-    | ^
-    )
-  script_content_end: |-
-    (?x:
-    # optional html comment end punctuation followed by </script> tag
-      (?: (\s*) (-->) \s* )? (?=</(?i:script){{tag_name_break_char}})
-    # or standalone html comment end punctuation in a line
-    |   ^ (\s*) (-->) \s* $
-    )
-  style_content_begin: '{{script_content_begin}}'
-  style_content_end: |-
-    (?x:
-    # optional html comment end punctuation followed by </style> tag
-      (?: (\s*) (-->) \s* )? (?=</(?i:style){{tag_name_break_char}})
-    # or standalone html comment end punctuation in a line
-    |   ^ (\s*) (-->) \s* $
-    )
-
 contexts:
   prototype:
     - meta_prepend: true

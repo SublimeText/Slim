@@ -1,0 +1,20 @@
+%YAML 1.2
+---
+# http://www.sublimetext.com/docs/syntax.html
+name: Markdown (for Slim)
+scope: text.html.markdown.embedded.slim
+version: 2
+hidden: true
+
+extends: Packages/Markdown/Markdown.sublime-syntax
+
+contexts:
+  prototype:
+    - meta_prepend: true
+    - include: Slim.sublime-syntax#slim-interpolations
+
+  main:
+    - include: indented-markdown
+
+  html-content:
+    - include: scope:text.html.embedded.slim
