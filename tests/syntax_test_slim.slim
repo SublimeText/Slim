@@ -290,10 +290,10 @@ h2
 section
   #nested
     .selectors
-/   ^^^^^^^^^^ meta.tag.slim meta.attribute-with-value.class.slim
+/   ^^^^^^^^^^ meta.tag.slim
 /^^^ - meta.tag - entity
 /   ^ punctuation.definition.attribute.class.slim
-/    ^^^^^^^^^ meta.string.slim string.unquoted.slim
+/    ^^^^^^^^^ entity.name.attribute.class.slim
 
 
 /[ Tag Text Tests ]////////////////////////////////////////////////////////////
@@ -393,93 +393,93 @@ section.class
 /^^^^^^^^^^^^ meta.tag.slim
 /^^^^^^ entity.name.tag.slim
 /      ^ punctuation.definition.attribute.class.slim
-/       ^^^^^ string.unquoted.slim
+/       ^^^^^ entity.name.attribute.class.slim
 
 section.two.classes
 / <- meta.tag.slim entity.name.tag.slim
 /^^^^^^^^^^^^^^^^^^ meta.tag.slim
 /^^^^^^ entity.name.tag.slim
 /      ^ punctuation.definition.attribute.class.slim
-/       ^^^ string.unquoted.slim
+/       ^^^ entity.name.attribute.class.slim
 /          ^ punctuation.definition.attribute.class.slim
-/           ^^^^^^^ string.unquoted.slim
+/           ^^^^^^^ entity.name.attribute.class.slim
 
 section#id
 / <- meta.tag.slim entity.name.tag.slim
 /^^^^^^^^^ meta.tag.slim
 /^^^^^^ entity.name.tag.slim
 /      ^ punctuation.definition.attribute.id.slim
-/       ^^ string.unquoted.slim
+/       ^^ entity.name.attribute.id.slim
 
 section#id.class
 / <- meta.tag.slim entity.name.tag.slim
 /^^^^^^^^^^^^^^^ meta.tag.slim
 /^^^^^^ entity.name.tag.slim
 /      ^ punctuation.definition.attribute.id.slim
-/       ^^ string.unquoted.slim
+/       ^^ entity.name.attribute.id.slim
 /         ^ punctuation.definition.attribute.class.slim
-/          ^^^^^ string.unquoted.slim
+/          ^^^^^ entity.name.attribute.class.slim
 
 section.class#id
 / <- meta.tag.slim entity.name.tag.slim
 /^^^^^^^^^^^^^^^ meta.tag.slim
 /^^^^^^ entity.name.tag.slim
 /      ^ punctuation.definition.attribute.class.slim
-/       ^^^^^ string.unquoted.slim
+/       ^^^^^ entity.name.attribute.class.slim
 /            ^ punctuation.definition.attribute.id.slim
-/             ^^ string.unquoted.slim
+/             ^^ entity.name.attribute.id.slim
 
 section.class#id.class
 / <- meta.tag.slim entity.name.tag.slim
 /^^^^^^^^^^^^^^^^^^^^^ meta.tag.slim
 /^^^^^^ entity.name.tag.slim
 /      ^ punctuation.definition.attribute.class.slim
-/       ^^^^^ string.unquoted.slim
+/       ^^^^^ entity.name.attribute.class.slim
 /            ^ punctuation.definition.attribute.id.slim
-/             ^^ string.unquoted.slim
+/             ^^ entity.name.attribute.id.slim
 /               ^ punctuation.definition.attribute.class.slim
-/                ^^^^^ string.unquoted.slim
+/                ^^^^^ entity.name.attribute.class.slim
 
 section.dash-class
 / <- meta.tag.slim entity.name.tag.slim
 /^^^^^^^^^^^^^^^^^ meta.tag.slim
 /^^^^^^ entity.name.tag.slim
 /      ^ punctuation.definition.attribute.class.slim
-/       ^^^^^^^^^^ string.unquoted.slim
+/       ^^^^^^^^^^ entity.name.attribute.class.slim
 
 section.dashdash--class
 / <- meta.tag.slim entity.name.tag.slim
 /^^^^^^^^^^^^^^^^^^^^^^ meta.tag.slim
 /^^^^^^ entity.name.tag.slim
 /      ^ punctuation.definition.attribute.class.slim
-/       ^^^^^^^^^^^^^^^ string.unquoted.slim
+/       ^^^^^^^^^^^^^^^ entity.name.attribute.class.slim
 
 section.underscore_class
 / <- meta.tag.slim entity.name.tag.slim
 /^^^^^^^^^^^^^^^^^^^^^^^ meta.tag.slim
 /^^^^^^ entity.name.tag.slim
 /      ^ punctuation.definition.attribute.class.slim
-/       ^^^^^^^^^^^^^^^^ string.unquoted.slim
+/       ^^^^^^^^^^^^^^^^ entity.name.attribute.class.slim
 
 section.underscoreunderscore__class
 / <- meta.tag.slim entity.name.tag.slim
 /^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.tag.slim
 /^^^^^^ entity.name.tag.slim
 /      ^ punctuation.definition.attribute.class.slim
-/       ^^^^^^^^^^^^^^^^^^^^^^^^^^^ string.unquoted.slim
+/       ^^^^^^^^^^^^^^^^^^^^^^^^^^^ entity.name.attribute.class.slim
 section.-leading-dash
 / <- meta.tag.slim entity.name.tag.slim
 /^^^^^^^^^^^^^^^^^^^^ meta.tag.slim
 /^^^^^^ entity.name.tag.slim
 /      ^ punctuation.definition.attribute.class.slim
-/       ^^^^^^^^^^^^^ string.unquoted.slim
+/       ^^^^^^^^^^^^^ entity.name.attribute.class.slim
 
 section-with-dashes.class
 / <- meta.tag.slim entity.name.tag.slim
 /^^^^^^^^^^^^^^^^^^^^^^^^ meta.tag.slim
 /^^^^^^^^^^^^^^^^^^ entity.name.tag.slim
 /                  ^ punctuation.definition.attribute.class.slim
-/                   ^^^^^ string.unquoted.slim
+/                   ^^^^^ entity.name.attribute.class.slim
 
 /! Valid TailwindCSS classes
 button.w-2/3.bg-cyan-700.hover:bg-cyan-700.text-white
@@ -487,13 +487,13 @@ button.w-2/3.bg-cyan-700.hover:bg-cyan-700.text-white
 /^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.tag.slim
 /^^^^^ entity.name.tag.slim
 /     ^ punctuation.definition.attribute.class.slim
-/      ^^^^^ string.unquoted.slim
+/      ^^^^^ entity.name.attribute.class.slim
 /           ^ punctuation.definition.attribute.class.slim
-/            ^^^^^^^^^^^ string.unquoted.slim
+/            ^^^^^^^^^^^ entity.name.attribute.class.slim
 /                       ^ punctuation.definition.attribute.class.slim
-/                        ^^^^^^^^^^^^^^^^^ string.unquoted.slim
+/                        ^^^^^^^^^^^^^^^^^ entity.name.attribute.class.slim
 /                                         ^ punctuation.definition.attribute.class.slim
-/                                          ^^^^^^^^^^ string.unquoted.slim
+/                                          ^^^^^^^^^^ entity.name.attribute.class.slim
 
 /! Invalid TailwindCSS class
 butoon.w-2/a
@@ -501,7 +501,7 @@ butoon.w-2/a
 /^^^^^^^^^^ meta.tag.slim
 /^^^^^ entity.name.tag.slim
 /     ^ punctuation.definition.attribute.class.slim
-/      ^^^ string.unquoted.slim
+/      ^^^ entity.name.attribute.class.slim
 /         ^ punctuation.terminator.tag.slim
 /          ^^ - text.html.embedded.slim
 
@@ -511,7 +511,7 @@ bottom.top-[117px].bg-cyan-700
 /^^^^^^^^^^^^^^^^^ meta.tag.slim
 /^^^^^ entity.name.tag.slim
 /     ^ punctuation.definition.attribute.class.slim
-/      ^^^^ string.unquoted.slim
+/      ^^^^ entity.name.attribute.class.slim
 /          ^^^^^^^ meta.brackets.slim
 /          ^ punctuation.section.brackets.begin.slim
 /                ^ punctuation.section.brackets.end.slim
@@ -519,69 +519,69 @@ bottom.top-[117px].bg-cyan-700
 
 .class
 / <- meta.tag.slim punctuation.definition.attribute.class.slim
-/^^^^^ meta.tag.slim meta.attribute-with-value.class.slim meta.string.slim string.unquoted.slim
+/^^^^^ meta.tag.slim entity.name.attribute.class.slim
 
 .two.classes
 / <- meta.tag.slim punctuation.definition.attribute.class.slim
 /^^^^^^^^^^^ meta.tag.slim
-/^^^ string.unquoted.slim
+/^^^ entity.name.attribute.class.slim
 /   ^ punctuation.definition.attribute.class.slim
-/    ^^^^^^^ string.unquoted.slim
+/    ^^^^^^^ entity.name.attribute.class.slim
 
 #id
 / <- meta.tag.slim punctuation.definition.attribute.id.slim
-/^^ meta.tag.slim string.unquoted.slim
+/^^ meta.tag.slim entity.name.attribute.id.slim
 
 #id.class
 / <- meta.tag.slim punctuation.definition.attribute.id.slim
 /^^^^^^^^ meta.tag.slim
-/^^ string.unquoted.slim
+/^^ entity.name.attribute.id.slim
 /  ^ punctuation.definition.attribute.class.slim
-/   ^^^^^ string.unquoted.slim
+/   ^^^^^ entity.name.attribute.class.slim
 
 .class#id
 / <- meta.tag.slim punctuation.definition.attribute.class.slim
 /^^^^^^^^ meta.tag.slim
-/^^^^^ string.unquoted.slim
+/^^^^^ entity.name.attribute.class.slim
 /     ^ punctuation.definition.attribute.id.slim
-/      ^^ string.unquoted.slim
+/      ^^ entity.name.attribute.id.slim
 
 .class#id.class
 / <- meta.tag.slim punctuation.definition.attribute.class.slim
 /^^^^^^^^^^^^^^ meta.tag.slim
-/^^^^^ string.unquoted.slim
+/^^^^^ entity.name.attribute.class.slim
 /     ^ punctuation.definition.attribute.id.slim
-/      ^^ string.unquoted.slim
+/      ^^ entity.name.attribute.id.slim
 /        ^ punctuation.definition.attribute.class.slim
-/         ^^^^^ string.unquoted.slim
+/         ^^^^^ entity.name.attribute.class.slim
 
 .dash-class
 / <- meta.tag.slim punctuation.definition.attribute.class.slim
-/^^^^^^^^^^ meta.tag.slim meta.attribute-with-value.class.slim meta.string.slim string.unquoted.slim
+/^^^^^^^^^^ entity.name.attribute.class.slim
 
 .dashdash--class
 / <- meta.tag.slim punctuation.definition.attribute.class.slim
-/^^^^^^^^^^^^^^^ meta.tag.slim meta.attribute-with-value.class.slim meta.string.slim string.unquoted.slim
+/^^^^^^^^^^^^^^^ entity.name.attribute.class.slim
 
 .underscore_class
 / <- meta.tag.slim punctuation.definition.attribute.class.slim
-/^^^^^^^^^^^^^^^^ meta.tag.slim meta.attribute-with-value.class.slim meta.string.slim string.unquoted.slim
+/^^^^^^^^^^^^^^^^ entity.name.attribute.class.slim
 
 .underscoreunderscore__class
 / <- meta.tag.slim punctuation.definition.attribute.class.slim
-/^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.tag.slim meta.attribute-with-value.class.slim meta.string.slim string.unquoted.slim
+/^^^^^^^^^^^^^^^^^^^^^^^^^^^ entity.name.attribute.class.slim
 
 .-leading-dash
 / <- meta.tag.slim punctuation.definition.attribute.class.slim
-/^^^^^^^^^^^^^ meta.tag.slim meta.attribute-with-value.class.slim meta.string.slim string.unquoted.slim
+/^^^^^^^^^^^^^ entity.name.attribute.class.slim
 
 ._leading_underscore
 / <- meta.tag.slim punctuation.definition.attribute.class.slim
-/^^^^^^^^^^^^^^^^^^^ meta.tag.slim meta.attribute-with-value.class.slim meta.string.slim string.unquoted.slim
+/^^^^^^^^^^^^^^^^^^^ entity.name.attribute.class.slim
 
 .w-2/3
 / <- meta.tag.slim punctuation.definition.attribute.class.slim
-/^^^^^ meta.tag.slim meta.attribute-with-value.class.slim meta.string.slim string.unquoted.slim
+/^^^^^ entity.name.attribute.class.slim
 
 
 /[ Attributes Tests ]//////////////////////////////////////////////////////////
@@ -620,13 +620,11 @@ div dash-attribute='attribute'
 
 div.class with-attribute="attribute"
 / <- meta.tag.slim entity.name.tag.slim
-/^^ meta.tag.slim - meta.attribute-with-value
-/  ^^^^^^ meta.tag.slim meta.attribute-with-value.class.slim
-/        ^ meta.tag.slim - meta.attribute-with-value
+/^^^^^^^^^ meta.tag.slim - meta.attribute-with-value
 /         ^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.tag.slim meta.attribute-with-value.slim
 /^^ entity.name.tag.slim
 /  ^ punctuation.definition.attribute.class.slim
-/   ^^^^^ string.unquoted.slim
+/   ^^^^^ entity.name.attribute.class.slim
 /         ^^^^^^^^^^^^^^ entity.other.attribute-name.slim
 /                       ^ punctuation.separator.key-value.slim
 /                        ^^^^^^^^^^^ meta.string.html string.quoted.double.html
@@ -984,7 +982,7 @@ div {
 /                                ^ - meta.tag - meta.embedded
 /                                 ^^^^^^^^^^^^ meta.embedded.slim
 /                                             ^ - meta.embedded
-/^^^^^ string.unquoted.slim
+/^^^^^ entity.name.attribute.class.slim
 /      ^ punctuation.section.embedded.begin.ruby
 /       ^^^^^^^^^^^^^^^^^^^^^^^^^ variable.function.ruby
 /                                 ^ punctuation.section.embedded.slim
@@ -997,7 +995,7 @@ div {
 /                              ^ - meta.tag - meta.embedded
 /                               ^^^^^^^^^^^^ meta.embedded.slim
 /                                           ^ - meta.embedded
-/^^^^^ string.unquoted.slim
+/^^^^^ entity.name.attribute.class.slim
 /      ^ punctuation.section.embedded.begin.ruby
 /       ^^^^^^^^^^^^^^^^^^^^^^^ variable.other.readwrite.instance.ruby
 /       ^ punctuation.definition.variable.ruby
@@ -1007,14 +1005,14 @@ div {
 .splat attrib="value" *method_which_returns_hash
 / <- meta.tag.slim punctuation.definition.attribute.class.slim
 /^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.tag.slim
-/^^^^^ string.unquoted.slim
+/^^^^^ entity.name.attribute.class.slim
 /      ^^^^^^^^^^^^^^ meta.attribute-with-value.slim
 /                     ^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.embedded.slim source.ruby.rails.embedded.slim
 /                     ^ punctuation.section.embedded.begin.ruby
 
 #splat*{ 'attribute' => 'value'}
 / <- meta.tag.slim punctuation.definition.attribute.id.slim
-/^^^^^ meta.tag.slim string.unquoted.slim
+/^^^^^ meta.tag.slim entity.name.attribute.id.slim
 /     ^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.tag.slim meta.embedded.slim
 /     ^^ punctuation.section.embedded.begin.ruby
 /       ^^^^^^^^^^^^^^^^^^^^^^^ source.ruby.rails.embedded.slim
@@ -1022,7 +1020,7 @@ div {
 
 .card*{'data-url'=>place_path(place), 'data-id'=>place.id} = place.name
 / <- meta.tag.slim punctuation.definition.attribute.class.slim
-/^^^^ meta.tag.slim meta.attribute-with-value.class.slim meta.string.slim string.unquoted.slim
+/^^^^ meta.tag.slim entity.name.attribute.class.slim
 /    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.tag.slim meta.embedded.slim
 /                                                         ^ - mete.tag - meta.embedded
 /                                                          ^^^^^^^^^^^^ meta.embedded.slim
@@ -1092,7 +1090,7 @@ span.class<> Both
 /^^^^^^^^^^^^ meta.tag.slim
 /^^^ entity.name.tag.slim
 /   ^ punctuation.definition.attribute.class.slim
-/    ^^^^^ string.unquoted.slim
+/    ^^^^^ entity.name.attribute.class.slim
 /         ^^ keyword.operator.whitespace.slim
 
 span.class>< Both
@@ -1100,7 +1098,7 @@ span.class>< Both
 /^^^^^^^^^^^^ meta.tag.slim
 /^^^ entity.name.tag.slim
 /   ^ punctuation.definition.attribute.class.slim
-/    ^^^^^ string.unquoted.slim
+/    ^^^^^ entity.name.attribute.class.slim
 /         ^^ keyword.operator.whitespace.slim
 
 
@@ -1315,25 +1313,22 @@ ul: li*{ 'class' => "klass" }: a[href="/b"] B link
 
 loc:url .this is="attr" this is text Title
 / <- meta.tag.slim entity.name.tag.slim
-/^^^^^^^ meta.tag.slim - meta.attribute-with-value
-/       ^^^^^ meta.tag.slim meta.attribute-with-value.class.slim
-/            ^ meta.tag.slim - meta.attribute-with-value
+/^^^^^^^^^^^^^ meta.tag.slim - meta.attribute-with-value
 /             ^^^^^^^^^ meta.tag.slim meta.attribute-with-value.slim
 /^^^^^^ entity.name.tag.slim
 /       ^ punctuation.definition.attribute.class.slim
-/        ^^^^ string.unquoted.slim
+/        ^^^^ meta.tag.slim entity.name.attribute.class.slim
 
 loc:url: .this is="attr" this is text Title
 / <- meta.tag.slim entity.name.tag.slim
 /^^^^^^^ meta.tag.slim - meta.attribute-with-value
 /       ^ - meta.tag
-/        ^^^^^ meta.tag.slim meta.attribute-with-value.class.slim
-/             ^ meta.tag.slim - meta.attribute-with-value
+/        ^^^^^^ meta.tag.slim - meta.attribute-with-value
 /              ^^^^^^^^^ meta.tag.slim meta.attribute-with-value.slim
 /^^^^^^ entity.name.tag.slim
 /      ^ punctuation.definition.tag.end.slim
 /        ^ punctuation.definition.attribute.class.slim
-/         ^^^^ string.unquoted.slim
+/         ^^^^ entity.name.attribute.class.slim
 
 
 /[ Ruby Line Tests ]///////////////////////////////////////////////////////////

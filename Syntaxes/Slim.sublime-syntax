@@ -371,14 +371,14 @@ contexts:
     # attribute shortcuts
     - match: \s*(({{class_attr_shortcut}})({{attr_shortcut_value}}))
       captures:
-        1: meta.attribute-with-value.class.slim
+        1: meta.attribute-shortcut.slim
         2: punctuation.definition.attribute.class.slim
-        3: meta.string.slim string.unquoted.slim
+        3: entity.name.attribute.class.slim
     - match: \s*(({{id_attr_shortcut}})({{attr_shortcut_value}}))
       captures:
-        1: meta.attribute-with-value.id.slim
+        1: meta.attribute-shortcut.slim
         2: punctuation.definition.attribute.id.slim
-        3: meta.string.slim string.unquoted.slim
+        3: entity.name.attribute.id.slim
     # attribute lists
     - match: \s*(\{)
       captures:
