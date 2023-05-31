@@ -975,6 +975,54 @@ div {
 /               ^ - meta.embedded
 / ^ punctuation.section.embedded.slim
 
+div[foo=]
+/ <- meta.tag.slim entity.name.tag.slim
+/^^ meta.tag.slim entity.name.tag.slim
+/  ^^^^^^ meta.tag.slim meta.brackets.slim
+/        ^ - meta.tag
+
+div[foo=]
+  div.example
+/ ^^^^^^^^^^^ meta.tag.slim
+
+div[foo=()]
+/ <- meta.tag.slim entity.name.tag.slim
+/^^ meta.tag.slim entity.name.tag.slim
+/  ^^^^^^^^ meta.tag.slim meta.brackets.slim
+/          ^ - meta.tag
+
+div[foo=()]
+  div.example
+/ ^^^^^^^^^^^ meta.tag.slim
+
+div[foo=("bar" if baz?)]
+/ <- meta.tag.slim entity.name.tag.slim
+/^^ meta.tag.slim entity.name.tag.slim
+/  ^^^^^^^^^^^^^^^^^^^^^ meta.tag.slim meta.brackets.slim
+/                       ^ - meta.tag
+
+div[foo=("bar" if baz?)]
+  div.example
+/ ^^^^^^^^^^^ meta.tag.slim
+
+div.cls[foo=("bar" if baz?)]
+/ <- meta.tag.slim entity.name.tag.slim
+/^^^^^^ meta.tag.slim - meta.brackets
+/      ^^^^^^^^^^^^^^^^^^^^^ meta.tag.slim meta.brackets.slim
+/                           ^ - meta.tag
+
+div.cls[foo=("bar" if baz?)]
+  div.example
+/ ^^^^^^^^^^^ meta.tag.slim
+
+div.cls[
+    foo=(
+      "bar" if baz?
+    )
+  ]
+  div.example
+/ ^^^^^^^^^^^ meta.tag.slim
+
 .splat *method_which_returns_hash = place.name
 / <- meta.tag.slim punctuation.definition.attribute.class.slim
 /^^^^^^ meta.tag.slim - meta.embedded
