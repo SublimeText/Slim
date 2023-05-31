@@ -678,6 +678,8 @@ contexts:
 
   ruby-expression:
     - meta_scope: meta.embedded.slim source.ruby.rails.embedded.slim
+    - match: (?=[])}])
+      pop: 1
     - include: ruby-expressions
     - include: immediately-pop
 
